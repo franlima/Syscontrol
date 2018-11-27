@@ -50,16 +50,13 @@
 
             $user->setUsername($_POST["username"]);
             $user->setPassword($_POST["password"]);
-            $userdao->validateUser($user);
 
             // Validate credentials
-            if (count($user))
+            if (count($userdao->validateUser($user)))
             {
                 // Everything is correct, so start a new session
                 session_start();
-                
-                var_dump($user);
-                
+                                        
                 // Store data in session variables
                 $_SESSION["loggedin"] = true;
                 $_SESSION["id"] = $user->getId();
@@ -70,7 +67,8 @@
                 $db->closeConn();
                 
                 // Redirect user to welcome page
-                //header("location: welcome.php");
+                header("location: welcome.php");
+                exit();
             }
             else
             {
@@ -88,44 +86,50 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="description" content="">
-        <meta name="author" content="">
-        <link rel="icon" href="https://getbootstrap.com/favicon.ico">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <style type="text/css">
+        body{ font: 14px sans-serif; margin: auto;}
+        .wrapper{ width: 350px; padding: 20px; margin: auto; }
+    </style>
+</head>
+<body>
+    <div  class="wrapper">
+        <h2>Login</h2>
+        <p>Please fill in your credentials to login.</p>
+        <form action="" method="post">
+            <div class="form-group">
+                <label>Username</label>
+                <label for="login" class="sr-only">Username</label>
+                <input type="text" id="login" name="username" class="form-control" value="<?php echo $username; ?>">
+                <span class="help-block"><?php echo $username_err; ?></span>
 
-        <title>Signin Template for Bootstrap</title>
-
-        <!-- Bootstrap core CSS -->
-        <link href="./css/bootstrap.min.css" rel="stylesheet">
-
-        <!-- Custom styles for this template -->
-        <link href="./css/signin.css" rel="stylesheet">
-  </head>
-  <body class="text-center">
-    <form class="form-signin" method="post">
-        <div class="form-group">
-            <img class="mb-4" src="./css/bootstrap-solid.svg" alt="" width="72" height="72">
-            <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-            
-            <label for="login" class="sr-only">Username</label>
-            <input type="text" id="login" name="username" class="form-control" placeholder="Username" value="<?php echo $username; ?>">
-            <span class="help-block"><?php echo $username_err; ?></span>
-            
-            <label for="inputPassword" class="sr-only">Password</label>
-            <input type="password" id="inputPassword" name="password"  class="form-control" placeholder="Password">
-            <span class="help-block"><?php echo $password_err; ?></span>
-        </div>
-        <div class="form-group">
-            <input type="submit" class="btn btn-primary" value="Login" name="submit">              
-        </div>
-        <!--<p>Don't have an account? <a href="register.php">Sign up now</a>.</p>-->
-        <label>
+                <label>Password</label>
+                <label for="inputPassword" class="sr-only">Password</label>
+                <input type="password" id="inputPassword" name="password" class="form-control">
+                <span class="help-block"><?php echo $password_err; ?></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Login" name="submit">              
+            </div>
+            <!--<p>Don't have an account? <a href="register.php">Sign up now</a>.</p>-->
             <span class="help-block"><?php echo $login_err; ?></span>
-        </label>
-        <p class="mt-5 mb-3 text-muted">© 2018 Copyright:<a href=""> Loteria Lotoplaza</a></p>
-    </form> 
+        </form>
+    </div>    
 </body>
+<!-- Footer -->
+<footer class="page-footer font-small blue">
+
+  <!-- Copyright -->
+  <div class="footer-copyright text-center py-3">© 2018 Copyright:
+    <a href=""> Loteria Lotoplaza</a>
+  </div>
+  <!-- Copyright -->
+
+</footer>
+<!-- Footer -->
 </html>

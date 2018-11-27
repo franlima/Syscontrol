@@ -50,16 +50,13 @@
 
             $user->setUsername($_POST["username"]);
             $user->setPassword($_POST["password"]);
-            $userdao->validateUser($user);
 
             // Validate credentials
-            if (count($user))
+            if (count($userdao->validateUser($user)))
             {
                 // Everything is correct, so start a new session
                 session_start();
-                
-                var_dump($user);
-                
+                                        
                 // Store data in session variables
                 $_SESSION["loggedin"] = true;
                 $_SESSION["id"] = $user->getId();
@@ -70,7 +67,8 @@
                 $db->closeConn();
                 
                 // Redirect user to welcome page
-                //header("location: welcome.php");
+                header("location: welcome.php");
+                exit();
             }
             else
             {
@@ -88,44 +86,36 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <meta name="apple-mobile-web-app-capable" content="yes">
-        <meta name="description" content="">
-        <meta name="author" content="">
-        <link rel="icon" href="https://getbootstrap.com/favicon.ico">
-
-        <title>Signin Template for Bootstrap</title>
-
-        <!-- Bootstrap core CSS -->
-        <link href="./css/bootstrap.min.css" rel="stylesheet">
-
-        <!-- Custom styles for this template -->
-        <link href="./css/signin.css" rel="stylesheet">
-  </head>
-  <body class="text-center">
-    <form class="form-signin" method="post">
-        <div class="form-group">
-            <img class="mb-4" src="./css/bootstrap-solid.svg" alt="" width="72" height="72">
-            <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-            
-            <label for="login" class="sr-only">Username</label>
-            <input type="text" id="login" name="username" class="form-control" placeholder="Username" value="<?php echo $username; ?>">
-            <span class="help-block"><?php echo $username_err; ?></span>
-            
-            <label for="inputPassword" class="sr-only">Password</label>
-            <input type="password" id="inputPassword" name="password"  class="form-control" placeholder="Password">
-            <span class="help-block"><?php echo $password_err; ?></span>
-        </div>
-        <div class="form-group">
-            <input type="submit" class="btn btn-primary" value="Login" name="submit">              
-        </div>
-        <!--<p>Don't have an account? <a href="register.php">Sign up now</a>.</p>-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
+</head>
+<body>
+<div class="wrapper">
+    <form class="form-group" method="post">
+      <img class="mb-4" src="./Signin Template for Bootstrap_files/bootstrap-solid.svg" alt="" width="72" height="72">
+      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+      <label for="login" class="sr-only">Username</label>
+      <input type="email" id="login" class="form-control" placeholder="Username" name="username">
+      <span class="help-block"><?php echo $username_err; ?></span>
+      <label for="inputPassword" class="sr-only">Password</label>
+      <input type="password" id="inputPassword" class="form-control" placeholder="Password" name="password">
+      <span class="help-block"><?php echo $password_err; ?></span>
+      <div class="checkbox mb-3">
         <label>
             <span class="help-block"><?php echo $login_err; ?></span>
         </label>
-        <p class="mt-5 mb-3 text-muted">© 2018 Copyright:<a href=""> Loteria Lotoplaza</a></p>
-    </form> 
+      </div>
+      <button class="btn btn-lg btn-primary btn-block" type="submit" name="submit">Sign in</button>
+      <p class="mt-5 mb-3 text-muted">© 2017-2018</p>
+    </form>
+</div>
 </body>
+<div id="footerWrapper">
+        <div class="footer">
+            <p class="site">Copyright © 2018 Loteria Lotoplaza LTDA - ME. All rights reserved.</p>
+    </div> 
 </html>
