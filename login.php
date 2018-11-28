@@ -48,17 +48,23 @@
             $user = new users();
             $userdao = new usersdao($db);
 
+            //var_dump($user);
+
             $user->setUsername($_POST["username"]);
             $user->setPassword($_POST["password"]);
-            $userdao->validateUser($user);
+            $user = $userdao->validateUser($user);
+
+            //var_dump($user);
 
             // Validate credentials
-            if (count($user))
+            /*
+                Test whether $stmt returned a valid row (object) or nothing (boolean)
+            */
+            if (is_object($user))
             {
                 // Everything is correct, so start a new session
                 session_start();
-                
-                var_dump($user);
+
                 
                 // Store data in session variables
                 $_SESSION["loggedin"] = true;
@@ -70,7 +76,7 @@
                 $db->closeConn();
                 
                 // Redirect user to welcome page
-                //header("location: welcome.php");
+                header("location: welcome.php");
             }
             else
             {

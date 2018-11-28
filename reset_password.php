@@ -70,9 +70,7 @@
                     $db->closeConn();
                     
                     // Password updated successfully. Destroy the session, and redirect to login page
-                    session_destroy();
-                    header("location: login.php");
-                    exit();
+                    header("location: welcome.php");
                 }
                 else
                 {
@@ -84,6 +82,9 @@
                 }
             }
         }
+    }
+    elseif(isset($_POST['cancel'])) {
+        header("location: welcome.php");
     }
 ?>
  
@@ -109,7 +110,7 @@
     <form class="form-signin" method="post">
         <div class="form-group">
             <img class="mb-4" src="./css/bootstrap-solid.svg" alt="" width="72" height="72">
-            <h1 class="h3 mb-3 font-weight-normal">Reset password</h1>
+            <h1 class="h3 mb-3 font-weight-normal">Reset password of <?php echo $_SESSION["username"] ?></h1>
             
             <label for="new_password" class="sr-only">New password</label>
             <input type="password" id="new_password" name="new_password" class="form-control" placeholder="New Password">
@@ -120,8 +121,10 @@
             <span class="help-block"><?php echo $confirm_password_err; ?></span>
         </div>
         <div class="form-group">
-            <input type="submit" class="btn btn-primary" value="Reset Password" name="reset">              
+            <input type="submit" class="btn btn-primary" value="Reset Password" name="reset">
+            <input type="submit" class="btn btn-primary" value="Cancel" name="cancel">            
         </div>
+        
         <!--<p>Don't have an account? <a href="register.php">Sign up now</a>.</p>-->
         <p class="mt-5 mb-3 text-muted">© 2018 Copyright:<a href=""> Loteria Lotoplaza</a></p>
     </form> 

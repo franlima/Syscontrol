@@ -6,6 +6,7 @@ require_once ('/Xampp/htdocs/syscontrol/model/users.php');
     class usersdao
     {
         private $conn;
+        private $user;
 
         public function usersdao ( db $db )       
         {
@@ -25,10 +26,10 @@ require_once ('/Xampp/htdocs/syscontrol/model/users.php');
             // This enables us to use the following:
             //     $user = $repository->find(1234);
             //     echo $user->firstname;
-            $stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE , 'users');
+            $stmt->setFetchMode(PDO::FETCH_CLASS/*|PDO::FETCH_PROPS_LATE*/ , 'users');
             $stmt->execute();
-            return $stmt->fetch() ;
-
+            $user =  $stmt->fetch();
+            return $user;
         }
 
         public function findAll()
@@ -37,7 +38,7 @@ require_once ('/Xampp/htdocs/syscontrol/model/users.php');
                 SELECT * FROM users
             ');
             $stmt->execute();
-            $stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'users');
+            $stmt->setFetchMode(PDO::FETCH_CLASS/*|PDO::FETCH_PROPS_LATE*/, 'users');
             
             // fetchAll() will do the same as above, but we'll have an array. ie:
             //    $users = $repository->findAll();
@@ -50,17 +51,18 @@ require_once ('/Xampp/htdocs/syscontrol/model/users.php');
 
             try {
                 $stmt = $this->conn->prepare('
-                INSERT INTO users 
-                    (idtype, username, password, finished) 
-                VALUES 
-                    (:idtype, :username, :password, :finished)
+                    INSERT INTO users 
+                        (idtype, username, password, finished) 
+                    VALUES 
+                        (:idtype, :username, :password, :finished)
                 ');
                 $stmt->bindValue(':idtype', $model->getIdType(), PDO::PARAM_INT);
                 $stmt->bindValue(':username', $model->getUsername(), PDO::PARAM_STR);
                 $stmt->bindValue(':password', $model->getPassword(), PDO::PARAM_STR);
                 $stmt->bindValue(':finished', $model->getFinished(), PDO::PARAM_STR);
-                $stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE , 'users');
+                $stmt->setFetchMode(PDO::FETCH_CLASS/*|PDO::FETCH_PROPS_LATE*/ , 'users');
                 $stmt->execute();
+                return $this->conn->lastInsertId();
             } catch (PDOException $Exception) {
                 throw new $Exception($Exception->getMessage());
             }
@@ -85,9 +87,9 @@ require_once ('/Xampp/htdocs/syscontrol/model/users.php');
                 $stmt->bindValue(':username', $model->getUsername(), PDO::PARAM_STR);
                 $stmt->bindValue(':password', $model->getPassword(), PDO::PARAM_STR);
                 $stmt->bindValue(':finished', $model->getFinished(), PDO::PARAM_STR);
-                $stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE , 'users');
+                //$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE , 'users');
                 $stmt->execute();
-                return true;
+                return $this->conn->lastInsertId();
             } catch (PDOException $Exception) {
                 throw new $Exception($Exception->getMessage());
             }
@@ -102,14 +104,11 @@ require_once ('/Xampp/htdocs/syscontrol/model/users.php');
             ');
             $stmt->bindValue(':username', $model->getUsername(), PDO::PARAM_STR);
             $stmt->bindValue(':password', $model->getPassword(), PDO::PARAM_STR);
-            $stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'users');
+            $stmt->setFetchMode(PDO::FETCH_CLASS/*|PDO::FETCH_PROPS_LATE*/, 'users');
             $stmt->execute();
-            $model = $stmt->fetchAll();
-            
-            // fetchAll() will do the same as above, but we'll have an array. ie:
-            //    $users = $repository->findAll();
-            //    echo $users[0]->firstname;
-            return true;
+            $model = $stmt->fetch();
+
+            return $model;
         }
 
         public function updatePassword(users $model)
@@ -123,8 +122,9 @@ require_once ('/Xampp/htdocs/syscontrol/model/users.php');
                 ');
                 $stmt->bindValue(':id', $model->getId(), PDO::PARAM_INT);
                 $stmt->bindValue(':password', $model->getPassword(), PDO::PARAM_STR);
-                $stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'users');
-                return $stmt->execute();
+                $stmt->setFetchMode(PDO::FETCH_CLASS/*|PDO::FETCH_PROPS_LATE*/, 'users');
+                $stmt->execute();
+                return $this->conn->lastInsertId();
             } catch (PDOException $Exception) {
                 throw new $Exception($Exception->getMessage());
             }
