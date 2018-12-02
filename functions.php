@@ -27,4 +27,7 @@
         }
     }
 
+    function updateModal()
+    {
+    }
 ?>
