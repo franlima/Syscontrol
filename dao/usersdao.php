@@ -129,5 +129,24 @@ require_once ('/Xampp/htdocs/syscontrol/model/users.php');
                 throw new $Exception($Exception->getMessage());
             }
         }
+
+        public function delete($id)
+        {
+            try
+            {
+                $stmt = $this->conn->prepare('
+                    UPDATE users
+                    SET finished = :finished
+                    WHERE id = :id
+                ');
+                $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+                $stmt->bindValue(':finished', date('Y-m-d H:i:s'), PDO::PARAM_STR);
+                //$stmt->setFetchMode(PDO::FETCH_CLASS/*|PDO::FETCH_PROPS_LATE*/, 'users');
+                $stmt->execute();
+                return $this->conn->lastInsertId();
+            } catch (PDOException $Exception) {
+                throw new $Exception($Exception->getMessage());
+            }
+        }
     }
 ?>

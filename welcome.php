@@ -22,8 +22,6 @@
             padding: 15px;
             margin: auto;
             }
-    </style>
-    <style type="text/css">
         .wrapper{
             width: 650px;
             margin: 0 auto;
@@ -37,7 +35,7 @@
     </style>
     <script>
         $(document).ready(function(){
-            $('[data-toggle="tooltip"]').tooltip();   
+            $('[data-toggle="tooltip"]').tooltip();
             $('#myModal').on('hide.bs.modal', function () {    
                 console.log('username : '+$("#modal-username").val());    
                 console.log('result : '+$("#modal-result").val());    
@@ -46,11 +44,72 @@
             $('#delete').on('show.bs.modal', function(e) {
 
                 //get data-id attribute of the clicked element
-                var bookId = $(e.relatedTarget).data('id');
-                alert(bookId);
+                var userid = $(e.relatedTarget).data('id');
 
                 //populate the textbox
-                $(e.currentTarget).find('glyphicon[id="user-data-delete"]').prop('data-id', bookId);
+                $(e.currentTarget).attr('userid', userid);
+                $("#result").html('Are you sure you want to delete this user? #' + userid);
+            });
+            
+            // Variable to hold request
+            var request;
+
+            // Bind to the submit event of our form
+            $("#usersdelete").on('click', function(event){
+
+                // Prevent default posting of form - put here to work in case of errors
+                event.preventDefault();
+
+                // Abort any pending request
+                if (request) {
+                    request.abort();
+                }
+                // setup some local variables
+                var $form = $(this);
+
+                // Let's select and cache all the fields
+                var $inputs = $form.find("input, select, button, textarea");
+
+                // Serialize the data in the form
+                //var $data = [];
+                //$data['userid'] = $("#delete").attr('userid');
+                //var serializedData = $data.serialize();
+
+                // Let's disable the inputs for the duration of the Ajax request.
+                // Note: we disable elements AFTER the form data has been serialized.
+                // Disabled form elements will not be serialized.
+                $inputs.prop("disabled", true);
+
+                // Fire off the request to /form.php
+                request = $.ajax({
+                    url: "/syscontrol/usersdelete.php",
+                    type: "post",
+                    data: { "userid" : $("#delete").attr('userid') }
+                });
+
+                // Callback handler that will be called on success
+                request.done(function (response, textStatus, jqXHR){
+                    // Log a message to the console
+                    console.log("Hooray, it worked!");
+                    $("#result").html(response);
+                });
+
+                // Callback handler that will be called on failure
+                request.fail(function (jqXHR, textStatus, errorThrown){
+                    // Log the error to the console
+                    console.error("The following error occurred: "+
+                        textStatus, errorThrown
+                    );
+                    $("#result").html('Error occured');
+                });
+
+                // Callback handler that will be called regardless
+                // if the request failed or succeeded
+                request.always(function () {
+                    // Reenable the inputs
+                    $inputs.prop("disabled", false);
+                });
+
             });
         });
     </script>
@@ -61,12 +120,7 @@
             <div>
                 <h1>Hi, <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>. Welcome to our site.</h1>
             </div>
-            <div><!--
-                <p><a href="reset_password.php" class="btn btn-warning btn-lg">Reset Your Password</a></p><br>
-                <p><a href="logout.php" class="btn btn-danger btn-lg">Sign Out</a></p><br>
-                <p><a href="" class="btn btn-primary btn-lg">Adding user</a></p><br>
-                <p><a href="" class="btn btn-info btn-lg">Adding operations</a></p><br>-->
-
+            <div>
                 <div id="accordion">
                     <div class="card">
                         <div class="card-header" id="headingOne">
@@ -90,9 +144,7 @@
                                     <span class="help-block"></span>
                                 </div>
                                 <div class="form-group">
-                                    <input type="submit" class="btn btn-primary" value="Reset Password" name="reset">
-                                    <!--<a href="" class="btn btn-primary" onclick="document.getElementById('headingOne').setAttribute('data-toggle', 'collapse');"
-                                    >Cancel</a>-->         
+                                    <input type="submit" class="btn btn-primary" value="Reset Password" name="reset">       
                                 </div>
                             </form>
                         </div>
@@ -109,9 +161,9 @@
                         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                         <div class="card-body">
                             <?php 
-                                include_once("managerusers.php"); 
+                                include_once("usersmanager.php"); 
                             ?>
-                        </div>ss
+                        </div>
                         </div>
                     </div>
                     <div class="card">
