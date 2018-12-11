@@ -70,13 +70,18 @@
                 $_SESSION["loggedin"] = true;
                 $_SESSION["id"] = $user->getId();
                 $_SESSION["username"] = $user->getUsername();
+                $_SESSION["usertype"] = $user->getIdType();
                 
                 $user = null;
                 $userdao = null;
                 $db->closeConn();
                 
                 // Redirect user to welcome page
-                header("location: welcome.php");
+
+                if ($_SESSION["usertype"] == "1")
+                    header("location: main_supervisor.php");
+                else
+                    header("location: main_users.php");
             }
             else
             {

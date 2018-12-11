@@ -9,10 +9,10 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="form-group">
-                                        <label for="data-userid">Id#</label>
+                                        <input id="data-userid" class="form-control" type="text" placeholder="userid" value="1" disabled="true">
                                     </div>
                                     <div class="form-group">
-                                        <select id="data-usertype" class="form-control" title="User type" data-toggle="tooltip" value="3">
+                                        <select id="data-usertype" class="form-control" title="User type" data-toggle="tooltip">
                                             <option selected hidden>Choose here</option>
                                             <option value="1">Supervisor</option>
                                             <option value="2">Vendedor</option>
@@ -20,7 +20,7 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <input id="data-username" class="form-control" type="text" placeholder="Username">
+                                        <input id="data-username" class="form-control" type="text" placeholder="Username" value="testte" disabled="true">
                                     </div>
                                     <div class="form-group">
                                         <input class="form-control" type="password" placeholder="New password">
